@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --gray: #cccccc;
+  --tamarillo: #ad1616;
+  --lima: #438a31;
+  --webOrange: #fea700;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background: var(--webOrange);
+}
+
+.container {
+  margin-left: 14vw;
+  width: 46%;
+  height: 100%;
+  background-color: var(--white);
+  box-shadow: 0px 0px 34px var(--black);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.title {
+  text-align: center;
+  font-size: 3em;
+  font-family: 'Satisfy', cursive;
+}
+
+.input-block {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2%;
+}
+
+.input-element {
+  min-width: 30px;
+  min-height: 30px;
+  height: 5%;
+  cursor: pointer;
+}
+
+.input-element:hover {
+  opacity: 0.7;
+}
+
+.clear-list {
+  background: url('./assets/clear-list.svg');
+  background-size: cover;
+}
+
+.clear-input {
+  background: url('./assets/clear-input.svg');
+  visibility: hidden;
+}
+
+.add-to-list {
+  background: url('./assets/add-to-list.svg');
+}
+
+.product-input {
+  width: 60%;
+  cursor: text;
+  outline: none;
+  border: none;
+  font-size: 1em;
+  border-bottom: 2px solid var(--gray);
+}
+
+.product-input:hover {
+  border-bottom: 2px solid var(--webOrange);
+}
+
+.product-input:focus {
+  border-bottom: 2px solid var(--black);
+}
+
+.product-list {
+  padding: 2% 5%;
+  height: 70%;
+  overflow: auto;
+  font-size: 1.5em;
+  word-break: break-all;
+}
+
+.product-from-list:hover {
+  cursor: pointer;
+  color: var(--webOrange);
+}
+
+.selected {
+  color: var(--tamarillo);
+  text-decoration: line-through;
+}
+
+.value-in-edit {
+  color: var(--lima);
+  text-decoration: underline;
+  text-shadow: 0px 0px 5px var(--black);
+}
+
+.instruction {
+  padding: 2%;
+  font-size: 13px;
+}
+
+@media screen and (max-width: 1000px) {
+  .container {
+    margin: 0 auto;
+    width: 80vw;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .instruction {
+    display: none;
+  }
+
+  .product-input {
+    width: 90%;
+  }
+}
