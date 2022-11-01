@@ -1,8 +1,25 @@
-const productInput = document.querySelector('.product-input');
-const clearListButton = document.querySelector('.clear-list');
-const clearInputButton = document.querySelector('.clear-input');
-const addToListButton = document.querySelector('.add-to-list');
-const productList = document.querySelector('.product-list');
+const ELEMENT_CLASSES = {
+  PRODUCT_INPUT: '.product-input',
+  CLEAR_LIST_BUTTON: '.clear-list',
+  CLEAR_INPUT_BUTTON: '.clear-input',
+  ADD_TO_LIST_BUTTON: '.add-to-list',
+  PRODUCT_LIST: '.product-list',
+  VALUE_IN_EDIT: 'value-in-edit',
+  PRODUCT_FROM_LIST: 'product-from-list',
+  SELECTED: 'selected',
+}
+
+const OTHER_VARIABLES = {
+  EDITING: ' (now editing...)',
+  MIDDLE_BUTTON_EVENT: 2,
+  ENTER_KEY_EVENT: 13
+}
+
+const productInput = document.querySelector(ELEMENT_CLASSES.PRODUCT_INPUT);
+const clearListButton = document.querySelector(ELEMENT_CLASSES.CLEAR_LIST_BUTTON);
+const clearInputButton = document.querySelector(ELEMENT_CLASSES.CLEAR_INPUT_BUTTON);
+const addToListButton = document.querySelector(ELEMENT_CLASSES.ADD_TO_LIST_BUTTON);
+const productList = document.querySelector(ELEMENT_CLASSES.PRODUCT_LIST);
 let currentEditableElement;
 
 const showClearInputButton = () => {
@@ -14,11 +31,13 @@ productInput.addEventListener('input', () => {
 });
 
 clearListButton.addEventListener('click', () => {
-  if (productList.childElementCount) {
-    productList.replaceChildren();
-
-    clearInputButton.click();
+  if (!productList.childElementCount) {
+    return;
   }
+
+  productList.replaceChildren();
+
+  clearInputButton.click();
 });
 
 clearInputButton.addEventListener('click', () => {
@@ -35,42 +54,53 @@ clearInputButton.addEventListener('click', () => {
 });
 
 addToListButton.addEventListener('click', () => {
-  if (productInput.value) {
+  if (!productInput.value) {
+    return;
+  }
+
+  if (currentEditableElement) {
+    currentEditableElement.textContent = '- ' + productInput.value;
+
+    currentEditableElement.classList.remove(ELEMENT_CLASSES.VALUE_IN_EDIT);
+
+    currentEditableElement = null;
+
+    clearInputButton.click();
+
+    return;
+  }
+
+  const elem = document.createElement('p');
+
+  elem.textContent = '- ' + productInput.value;
+  elem.className = ELEMENT_CLASSES.PRODUCT_FROM_LIST;
+
+  elem.addEventListener('mousedown', (event) => {
     if (currentEditableElement) {
-      currentEditableElement.textContent = '- ' + productInput.value;
-
-      currentEditableElement.classList.remove('value-in-edit');
-
-      currentEditableElement = null;
-
-      clearInputButton.click();
       return;
     }
 
-    const elem = document.createElement('p');
+    if (event.which === OTHER_VARIABLES.MIDDLE_BUTTON_EVENT) {
+      productInput.value = event.target.textContent.slice(2);
+      event.target.textContent += OTHER_VARIABLES.EDITING;
 
-    elem.textContent = '- ' + productInput.value;
-    elem.className = 'product-from-list';
+      currentEditableElement = event.target;
 
-    elem.addEventListener('mousedown', (event) => {
-      if (!currentEditableElement) {
-        if (event.which === 2) {
-          productInput.value = event.target.textContent.slice(2);
-          event.target.textContent += ' (now editing...)';
+      showClearInputButton();
+      event.target.classList.add(ELEMENT_CLASSES.VALUE_IN_EDIT);
+      return;
+    }
 
-          currentEditableElement = event.target;
+    event.target.classList.toggle(ELEMENT_CLASSES.SELECTED);
+  });
 
-          showClearInputButton();
-          event.target.classList.add('value-in-edit');
-          return;
-        }
+  productList.append(elem);
 
-        event.target.classList.toggle('selected');
-      }
-    });
+  clearInputButton.click();
+});
 
-    productList.append(elem);
-
-    clearInputButton.click();
+productInput.addEventListener('keypress', function (event) {
+  if (event.keyCode === OTHER_VARIABLES.ENTER_KEY_EVENT) {
+    addToListButton.click();
   }
 });
